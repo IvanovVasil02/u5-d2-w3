@@ -4,6 +4,7 @@ import ivanovvasil.u5d5w2Project.payloads.exceptionsDTO.ErrorsListResponseDTO;
 import ivanovvasil.u5d5w2Project.payloads.exceptionsDTO.ErrorsResponseDTO;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,9 +40,15 @@ public class ExceptionsHandler {
     return new ErrorsResponseDTO(e.getMessage(), new Date());
   }
 
-  @ExceptionHandler(AccesDeniedException.class)
+  @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  public ErrorsResponseDTO handleAnauthorized(AccesDeniedException e) {
+  public ErrorsResponseDTO handleAccesDenied(AccessDeniedException e) {
+    return new ErrorsResponseDTO(e.getMessage(), new Date());
+  }
+
+  @ExceptionHandler(UnauthorizedException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ErrorsResponseDTO handleAnauthorized(UnauthorizedException e) {
     return new ErrorsResponseDTO(e.getMessage(), new Date());
   }
 

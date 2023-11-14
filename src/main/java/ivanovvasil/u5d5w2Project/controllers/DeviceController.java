@@ -8,6 +8,7 @@ import ivanovvasil.u5d5w2Project.services.DevicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class DeviceController {
 
   @PostMapping("")
   @ResponseStatus(HttpStatus.CREATED)
-  public Device saveDevice(@RequestBody @Validated NewDeviceDTO body, BindingResult validation) {
+  public Device addDevice(@RequestBody @Validated NewDeviceDTO body, BindingResult validation) {
     if (validation.hasErrors()) {
       throw new BadRequestException("Empty or not respected fields", validation.getAllErrors());
     } else {
@@ -35,19 +36,20 @@ public class DeviceController {
   }
 
   @GetMapping("")
-  public Page<Device> getAll(@RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "15") int size,
-                             @RequestParam(defaultValue = "id") String orderBy) {
+  public Page<Device> getDevices(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "15") int size,
+                                 @RequestParam(defaultValue = "id") String orderBy) {
     return devicesService.findAll(page, size, orderBy);
   }
 
   @GetMapping("/{id}")
-  public Device findById(@PathVariable int id) {
+  public Device getDevice(@PathVariable int id) {
     return devicesService.findById(id);
   }
 
   @PutMapping("/{id}")
-  public Device findByIdAndUpdate(@PathVariable int id, @RequestBody @Validated NewPutDeviceDTO body, BindingResult validation) {
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public Device editDevice(@PathVariable int id, @RequestBody @Validated NewPutDeviceDTO body, BindingResult validation) {
 
     if (validation.hasErrors()) {
       throw new BadRequestException("Empty or not respected fields", validation.getAllErrors());
@@ -61,6 +63,7 @@ public class DeviceController {
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void findByIdAndDelete(@PathVariable int id) {
     devicesService.findByIdAndDelete(id);

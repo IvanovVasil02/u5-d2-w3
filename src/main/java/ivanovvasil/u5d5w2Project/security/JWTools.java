@@ -3,7 +3,7 @@ package ivanovvasil.u5d5w2Project.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import ivanovvasil.u5d5w2Project.entities.User;
-import ivanovvasil.u5d5w2Project.exceptions.AccesDeniedException;
+import ivanovvasil.u5d5w2Project.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,7 @@ public class JWTools {
               .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
               .build().parse(token);
     } catch (Exception e) {
-      throw new AccesDeniedException("Invalid acces token!");
+      throw new UnauthorizedException("Invalid acces token!");
 
     }
   }

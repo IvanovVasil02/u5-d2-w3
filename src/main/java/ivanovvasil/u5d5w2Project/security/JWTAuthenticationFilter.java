@@ -1,7 +1,7 @@
 package ivanovvasil.u5d5w2Project.security;
 
 import ivanovvasil.u5d5w2Project.entities.User;
-import ivanovvasil.u5d5w2Project.exceptions.AccesDeniedException;
+import ivanovvasil.u5d5w2Project.exceptions.UnauthorizedException;
 import ivanovvasil.u5d5w2Project.services.UsersService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,10 +26,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
   private UsersService usersService;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, AccesDeniedException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, UnauthorizedException, IOException {
     String authenticationHeader = request.getHeader("Authorization");
     if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
-      throw new AccesDeniedException("Empty Bearer Token or missing Bearer keyword");
+      throw new UnauthorizedException("Empty Bearer Token or missing Bearer keyword");
     } else {
       String userToken = authenticationHeader.substring(7);
 
@@ -38,7 +38,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
       int userId = Integer.parseInt(jwTools.extractIdFromToken(userToken));
       User currentUser = usersService.findById(userId);
 
-      Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null);
+      Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
       filterChain.doFilter(request, response);
