@@ -78,6 +78,8 @@ public class User implements UserDetails {
     private String email = f.internet().emailAddress();
     private String password = f.internet().password();
     private String profilePicture = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC0HlQ_ckX6HqCAlqroocyRDx_ZRu3x3ezoA&usqp=CAU";
+    private UserRole role = UserRole.getRandomRole();
+
   }
 }
 

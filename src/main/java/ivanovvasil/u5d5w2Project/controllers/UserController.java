@@ -24,7 +24,7 @@ public class UserController {
   private UsersService usersService;
 
   @GetMapping("")
-  @PreAuthorize("hasAuthority('ADMIN)")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public Page<User> getUsers(@RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "15") int size,
                              @RequestParam(defaultValue = "id") String orderBy) {
@@ -38,7 +38,7 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthority('ADMIN)")
+  @PreAuthorize("hasAuthority('ADMIN')")
   public User editUser(@PathVariable int id, @RequestBody @Validated NewPutUserDTO body, BindingResult validation) {
     if (validation.hasErrors()) {
       throw new BadRequestException("Empty or not respected fields", validation.getAllErrors());

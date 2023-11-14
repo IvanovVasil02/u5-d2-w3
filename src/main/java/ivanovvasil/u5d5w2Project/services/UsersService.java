@@ -5,10 +5,8 @@ import com.cloudinary.utils.ObjectUtils;
 import ivanovvasil.u5d5w2Project.entities.Device;
 import ivanovvasil.u5d5w2Project.entities.User;
 import ivanovvasil.u5d5w2Project.enums.DeviceStatus;
-import ivanovvasil.u5d5w2Project.exceptions.BadRequestException;
 import ivanovvasil.u5d5w2Project.exceptions.NotFoundException;
 import ivanovvasil.u5d5w2Project.payloads.NewPutUserDTO;
-import ivanovvasil.u5d5w2Project.payloads.NewUserDTO;
 import ivanovvasil.u5d5w2Project.repositories.DevicesRepository;
 import ivanovvasil.u5d5w2Project.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,23 +34,6 @@ public class UsersService {
     return usersRepository.save(employee);
   }
 
-
-  public User save(NewUserDTO body) throws IOException {
-    usersRepository.findByEmail(body.email()).ifPresent(author -> {
-      throw new BadRequestException("The email  " + author.getEmail() + " is already used!");
-    });
-    User newUser = new User();
-    newUser.setName(body.name());
-    newUser.setSurname(body.surname());
-    newUser.setEmail(body.email());
-    newUser.setPassword(newUser.getPassword());
-    if (body.profilePicture() != null) {
-      newUser.setProfilePicture(body.profilePicture());
-    } else {
-      newUser.setProfilePicture("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC0HlQ_ckX6HqCAlqroocyRDx_ZRu3x3ezoA&usqp=CAU");
-    }
-    return usersRepository.save(newUser);
-  }
 
   //findALl for employees runner
   public List<User> findAll() {
